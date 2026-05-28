@@ -4,43 +4,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Vote Yes</title>
 
   <style>
-
     body {
-      background: rgb(145, 141, 141);
+      margin: 0;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
       color: white;
 
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      gap: 20px;
 
-      min-height: 80vh;
-      margin: 0;
-      padding-top: 40px;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    .box {
-      width: 320px;
-      height: 420px;
-      background: rgb(193, 201, 209);
+    /* 🌑 Background layer 1 */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgb(146, 146, 146);
+      z-index: -3;
+    }
 
-      border-radius: 20px;
-      border: 5px solid rgb(4, 131, 124);
+    /* ✨ Background layer 2 */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.2), transparent 60%);
+      z-index: -2;
+    }
 
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-
-      text-align: center;
-      gap: 12px;
-
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      margin-top: 20px;
+    h2, p {
+      margin: 0;
     }
 
     button {
@@ -50,11 +52,8 @@
       cursor: pointer;
       font-size: 16px;
       transition: 0.2s;
-
       background: whitesmoke;
       color: rgb(80, 80, 80);
-
-      margin: 5px;
     }
 
     button:hover {
@@ -62,9 +61,50 @@
     }
 
     .button2 {
-      margin-top: 10px;
+      border: 2px solid #437774;
     }
 
+    /* MAIN CARD */
+    .box {
+      width: min(90%, 320px);
+      min-height: 420px;
+
+      background: rgb(193, 201, 209);
+      border-radius: 20px;
+      border: 5px solid #437774;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      color: rgb(50, 50, 50);
+      z-index: 1;
+    }
+
+    /* 🎨 DECORATIVE BACKGROUND BOX */
+    .box1 {
+      position: fixed;
+
+      width: min(1200px, 90vw);
+      height: min(800px, 80vh);
+
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      background: rgb(193, 201, 209);
+      border: 5px solid #437774;
+      border-radius: 20px;
+
+      z-index: -1;
+      pointer-events: none;
+
+      opacity: 0.7;
+    }
   </style>
 </head>
 
@@ -72,18 +112,12 @@
 
   <h2>Login</h2>
 
-  <button class="button2" onclick="loginGoogle()">
-    Sign in with Google
-  </button>
-
-  <button class="button2" onclick="logout()">
-    Logout
-  </button>
+  <button class="button2" onclick="loginGoogle()">Sign in with Google</button>
+  <button class="button2" onclick="logout()">Logout</button>
 
   <p id="user">Not logged in</p>
 
   <div class="box">
-
     <h1>Is Miqy Gay?</h1>
     <p>Choose yes or no</p>
 
@@ -91,16 +125,12 @@
     <button onclick="vote('no')">No</button>
 
     <h3 id="result">Loading...</h3>
-
   </div>
 
+  <div class="box1"></div>
+
   <script type="module">
-
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-    /* =========================
-       SUPABASE SETUP
-    ========================== */
 
     const supabase = createClient(
       "https://rvkvzzyzputxmqnsfvhv.supabase.co",
@@ -109,45 +139,26 @@
 
     let user = null;
 
-    /* =========================
-       LOGIN
-    ========================== */
-
     window.loginGoogle = async function () {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: {
-          redirectTo: window.location.origin
-        }
+        options: { redirectTo: window.location.origin }
       });
 
       if (error) console.error(error.message);
     };
-
-    /* =========================
-       LOGOUT
-    ========================== */
 
     window.logout = async function () {
       await supabase.auth.signOut();
       location.reload();
     };
 
-    /* =========================
-       GET USER
-    ========================== */
-
     async function getUser() {
       const { data, error } = await supabase.auth.getUser();
-
-      if (error) {
-        console.error(error.message);
-        return;
-      }
+      if (error) return console.error(error.message);
 
       if (data?.user) {
         user = data.user;
-
         document.getElementById("user").innerText =
           "Logged in as: " + user.email;
 
@@ -157,64 +168,29 @@
 
     getUser();
 
-    /* =========================
-       VOTE
-    ========================== */
-
     window.vote = async function (type) {
+      if (!user) return alert("Please log in first");
 
-      if (!user) {
-        alert("Please log in first");
-        return;
-      }
-
-      const { data: existing, error } = await supabase
+      const { data: existing } = await supabase
         .from("votes")
         .select("*")
         .eq("user_id", user.id)
         .maybeSingle();
 
-      if (error) {
-        console.error(error.message);
-        return;
-      }
+      if (existing) return alert("You already voted");
 
-      if (existing) {
-        alert("You already voted");
-        return;
-      }
-
-      const { error: insertError } = await supabase
+      const { error } = await supabase
         .from("votes")
-        .insert([
-          {
-            user_id: user.id,
-            vote: type
-          }
-        ]);
+        .insert([{ user_id: user.id, vote: type }]);
 
-      if (insertError) {
-        console.error(insertError.message);
-        return;
-      }
+      if (error) return console.error(error.message);
 
       loadVotes();
     };
 
-    /* =========================
-       LOAD VOTES
-    ========================== */
-
     async function loadVotes() {
-
-      const { data, error } = await supabase
-        .from("votes")
-        .select("*");
-
-      if (error) {
-        console.error(error.message);
-        return;
-      }
+      const { data, error } = await supabase.from("votes").select("*");
+      if (error) return console.error(error.message);
 
       const yes = data.filter(v => v.vote === "yes").length;
       const no = data.filter(v => v.vote === "no").length;
@@ -222,7 +198,6 @@
       document.getElementById("result").innerText =
         `Yes: ${yes} | No: ${no}`;
     }
-
   </script>
 
 </body>
