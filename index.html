@@ -1,152 +1,369 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Vote yes</title>
+  
   <style>
+
+    /* =========================
+       PAGE STYLING
+    ========================== */
+
     body {
-      background: black;
-      font-family: Birch;
+
+      /* Background color */
+      background: rgb(145, 141, 141);
+
+      /* Font for entire page */
+      font-family: Arial, sans-serif;
+
+      /* Text color */
       color: white;
 
+      /* Center everything */
       display: flex;
       flex-direction: column;
       align-items: center;
 
-      height: 50vh;
+      /* Full page height */
+      min-height: 100vh;
+
+      /* Remove browser default margin */
       margin: 0;
-      padding-top: 80px;
+
+      /* Space from top */
+      padding-top: 60px;
     }
 
+
+    /* =========================
+       VOTING BOX
+    ========================== */
+
     .box {
+
       width: 320px;
       height: 420px;
-      background: grey;
+
+      background: rgb(193, 201, 209);
 
       border-radius: 20px;
-      border: 5px solid grey;
 
+      border: 5px solid rgb(4, 131, 124);
+
+      /* Center content inside box */
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+
       text-align: center;
 
       margin-top: 20px;
-      gap: 10px;
+
+      /* Space between items */
+      gap: 12px;
+
+      /* Optional shadow */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
+
+    /* =========================
+       BUTTONS
+    ========================== */
+
     button {
-      padding: 15px;
-      cursor: pointer;
-      border-radius: 8px;
+
+      padding: 12px 20px;
+
       border: none;
+
+      border-radius: 10px;
+
+      cursor: pointer;
+
+      font-size: 16px;
+
+      transition: 0.2s;
+
+      background: whitesmoke;
+     
+      color: rgb(117, 117, 117);
+
+      margin: 5px;
+    
     }
+
+    .button2
+
+    margin-top: 10px;
+
+    /* Hover effect */
+    button:hover {
+      transform: scale(1.05);
+    }
+
   </style>
 </head>
 
 <body>
 
-  <!-- LOGIN -->
+  <!-- =========================
+       LOGIN SECTION
+  ========================== -->
+
   <h2>Login</h2>
 
-  <button onclick="loginGoogle()">Sign in with Google(not working)</button>
-  <button onclick="logout()">Logout</button>
+  <!-- Google login button -->
+  <button class="button2" onclick="loginGoogle()">
+    Sign in with Google
+  </button>
 
-  <p id="user">Not logged in</p>
+  <!-- Logout button -->
+  <button class="button2" onclick="logout()">
+    Logout
+  </button>
 
-  <!-- VOTING -->
+  <!-- User information -->
+  <p id="user">
+    Not logged in
+  </p>
+
+
+
+  <!-- =========================
+       VOTING BOX
+  ========================== -->
+
   <div class="box">
+
     <h1>Is Miqy Gay?</h1>
-    <p>choose yes or no</p>
 
-    <button onclick="vote('yes')">yes</button>
-    <button onclick="vote('no')">no</button>
+    <p>Choose yes or no</p>
 
-    <h3 id="result">Loading.</h3>
+    <!-- Vote buttons -->
+    <button onclick="vote('yes')">
+      Yes
+    </button>
+
+    <button onclick="vote('no')">
+      No
+    </button>
+
+    <!-- Vote result -->
+    <h3 id="result">
+      Loading...
+    </h3>
+
   </div>
 
-  <!-- SUPABASE -->
+
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================== -->
+
   <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    /*
+      Import Supabase library
+    */
+    import { createClient }
+      from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+
+
+    /* =========================
+       CONNECT TO SUPABASE
+    ========================== */
 
     const supabase = createClient(
+
+      // Your Supabase project URL
       "https://rvkvzzyzputxmqnsfvhv.supabase.co",
+
+      // Your public anon key
       "YOUR_SUPABASE_ANON_KEY"
     );
 
+
+
+    /* =========================
+       USER VARIABLE
+    ========================== */
+
+    // Stores logged in user
     let user = null;
 
-    // LOGIN
+
+
+    /* =========================
+       GOOGLE LOGIN
+    ========================== */
+
     window.loginGoogle = async function () {
+
       await supabase.auth.signInWithOAuth({
+
         provider: "google",
+
         options: {
+
+          // Website redirect after login
           redirectTo: "https://v32x.com"
         }
       });
     };
 
-    // LOGOUT
+
+
+    /* =========================
+       LOGOUT
+    ========================== */
+
     window.logout = async function () {
+
+      // Sign out user
       await supabase.auth.signOut();
+
+      // Reload page
       location.reload();
     };
 
-    // GET USER
+
+
+    /* =========================
+       GET CURRENT USER
+    ========================== */
+
     async function getUser() {
+
+      // Ask Supabase for logged in user
       const { data } = await supabase.auth.getUser();
 
+
+
+      // If user exists
       if (data.user) {
+
+        // Save user
         user = data.user;
+
+        // Show email on page
         document.getElementById("user").innerText =
           "Logged in as: " + user.email;
 
+        // Load vote results
         loadVotes();
       }
     }
 
+    // Run function immediately
     getUser();
 
-    // VOTE
+
+
+    /* =========================
+       VOTING SYSTEM
+    ========================== */
+
     window.vote = async function (type) {
+
+      // If not logged in
       if (!user) {
+
         alert("Please log in first");
+
         return;
       }
 
-      // check if already voted
+
+
+      /*
+        Check if user already voted
+      */
       const { data: existing } = await supabase
+
         .from("votes")
+
         .select("*")
+
         .eq("user_id", user.id)
+
         .single();
 
+
+
+      // If vote exists
       if (existing) {
+
         alert("You already voted");
+
         return;
       }
 
-      await supabase.from("votes").insert([
-        {
-          user_id: user.id,
-          vote: type
-        }
-      ]);
 
+
+      /*
+        Insert vote into database
+      */
+      await supabase
+
+        .from("votes")
+
+        .insert([
+          {
+            user_id: user.id,
+            vote: type
+          }
+        ]);
+
+
+
+      // Reload votes
       loadVotes();
     };
 
-    // LOAD RESULTS
-    async function loadVotes() {
-      const { data } = await supabase.from("votes").select("*");
 
+
+    /* =========================
+       LOAD VOTES
+    ========================== */
+
+    async function loadVotes() {
+
+      // Get all votes
+      const { data } = await supabase
+
+        .from("votes")
+
+        .select("*");
+
+
+
+      // If database failed
       if (!data) return;
 
+
+
+      // Count YES votes
       const yes = data.filter(v => v.vote === "yes").length;
+
+      // Count NO votes
       const no = data.filter(v => v.vote === "no").length;
 
+
+
+      // Show result
       document.getElementById("result").innerText =
         `Yes: ${yes} | No: ${no}`;
     }
+
   </script>
 
 </body>
