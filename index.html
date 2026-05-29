@@ -5,7 +5,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vote Yes</title>
-
   <style>
     body {
       margin: 0;
@@ -32,6 +31,14 @@
       z-index: -3;
     }
 
+    .logintxt {
+      color: solid black
+    }
+
+    h2 {
+      color: rgb(80,80,80);
+    }
+    
     /* ✨ Background layer 2 */
     body::after {
       content: "";
@@ -43,6 +50,10 @@
 
     h2, p {
       margin: 0;
+    }
+    
+    .buttton.1 {
+      border 2px solid: #437774;
     }
 
     button {
@@ -109,22 +120,20 @@
 </head>
 
 <body>
-
-  <h2>Login</h2>
-
+  <h2 class="logintxt">Login</h2>
   <button class="button2" onclick="loginGoogle()">Sign in with Google</button>
   <button class="button2" onclick="logout()">Logout</button>
 
   <p id="user">Not logged in</p>
 
   <div class="box">
-    <h1>Is Miqy Gay?</h1>
+    <h1>Is Bill a Gay Fat femboy??</h1>
     <p>Choose yes or no</p>
 
-    <button onclick="vote('yes')">Yes</button>
-    <button onclick="vote('no')">No</button>
+    <button class="button.1" onclick="vote('yes')">Yes</button>
+    <button class="button.1" onclick="vote('no')">No</button>
 
-    <h3 id="result">Loading...</h3>
+    <h3 id="result">Loading</h3>
   </div>
 
   <div class="box1"></div>
@@ -134,7 +143,7 @@
 
     const supabase = createClient(
       "https://rvkvzzyzputxmqnsfvhv.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2a3Z6enl6cHV0eG1xbnNmdmh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MTg3MzMsImV4cCI6MjA5NTM5NDczM30.okmISH6SOVz7uNRFvNpBnayfix5N2enDE86DbYk3yBk"
+      "YOUR_SUPABASE_ANON_KEY"
     );
 
     let user = null;
