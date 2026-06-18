@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Great Vocabulary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- LINK CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- PASSWORD POPUP -->
+<div class="popup" id="passPopup">
+    <div class="popup-content">
+        <p>Enter password</p>
+
+        <input type="password" id="passInput" placeholder="Password">
+
+        <div class="error" id="errorText"></div>
+
+        <button onclick="checkPassword()">Enter</button>
+    </div>
+</div>
+
+<!-- MAIN BOX -->
+<div class="container">
+    <div class="box" onclick="openPasswordPopup()">
+        <h1 class="T">Great Vocabulary</h1>
+        <h2 class="H">This is the top moments of vocabulary</h2>
+    </div>
+</div>
+
+<script>
+const PASSWORD = "1234";
+
+function openPasswordPopup() {
+    document.getElementById("passPopup").style.display = "flex";
+    document.getElementById("errorText").innerText = "";
+    document.getElementById("passInput").value = "";
+}
+
+function checkPassword() {
+    let input = document.getElementById("passInput").value;
+
+    if (input === PASSWORD) {
+        window.location.href = "home.html";
+    } else {
+        document.getElementById("errorText").innerText = "Wrong password!";
+    }
+}
+</script>
+
+</body>
+</html>
