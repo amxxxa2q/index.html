@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fire Clips | The Best Gamers Alive</title>
+    <title>Fire Clips | The Undisputed</title>
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* Gamer Theme Variables */
+        /* Premium Esports Theme */
         :root {
-            --primary: #ff4500;
-            --primary-hover: #dc143c;
-            --bg: #0a0a0c;
-            --surface: #151518;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #2a2a35;
-            --glass-bg: rgba(10, 10, 12, 0.85);
-            --glow: 0 0 25px rgba(255, 69, 0, 0.5);
+            --primary: #ff3300;
+            --primary-light: #ff6600;
+            --bg-dark: #030305;
+            --surface: rgba(20, 20, 25, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #8a8a93;
+            --border-color: rgba(255, 51, 0, 0.15);
+            --glass-blur: blur(20px);
         }
 
         * {
@@ -28,12 +33,62 @@
             scroll-behavior: smooth;
         }
 
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient Glowing Background & Grid Overlay */
+        .bg-fx {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            /* Subtle Grid */
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Breathing Neon Orb */
+        .ambient-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255, 51, 0, 0.08) 0%, rgba(0, 0, 0, 0) 60%);
+            transform: translate(-50%, -50%);
+            z-index: -2;
+            animation: breathe 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes breathe {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
         }
 
         /* Navigation */
@@ -41,11 +96,11 @@
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 1rem 5%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 5%;
+            background: rgba(3, 3, 5, 0.7);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -53,34 +108,54 @@
         }
 
         .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            font-style: italic;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            background: linear-gradient(to right, #ff4500, #ff8c00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: var(--glow);
+            letter-spacing: 3px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 51, 0, 0.8);
+        }
+
+        .logo span {
+            color: var(--primary);
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
-            align-items: center;
+            gap: 2.5rem;
         }
 
         .nav-links a {
+            font-family: 'Rajdhani', sans-serif;
             text-decoration: none;
-            color: var(--text);
-            font-weight: bold;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .nav-links a:hover {
-            color: var(--primary);
+            color: var(--primary-light);
+            text-shadow: 0 0 10px rgba(255, 51, 0, 0.5);
         }
 
         /* Hero Section */
@@ -91,43 +166,70 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 6rem 1rem 2rem 1rem;
-            background: radial-gradient(circle at center, #1a0800 0%, var(--bg) 70%);
+            padding: 8rem 1rem 2rem 1rem;
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
-            margin-bottom: 1rem;
-            line-height: 1.1;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(3rem, 7vw, 6rem);
+            line-height: 1;
             text-transform: uppercase;
-            font-weight: 900;
-            letter-spacing: 1px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
         }
 
+        /* Animated Flowing Gradient Text */
         .highlight {
-            color: var(--primary);
-            text-shadow: var(--glow);
+            background: linear-gradient(90deg, #ff3300, #ffcc00, #ff3300);
+            background-size: 200% auto;
+            color: #fff;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: flow 3s linear infinite;
         }
 
-        /* Responsive Video Container - SUPER ROUND */
+        @keyframes flow {
+            to { background-position: 200% center; }
+        }
+
+        /* Premium Video Container */
         .video-wrapper {
             width: 100%;
-            max-width: 900px;
-            margin: 2rem auto;
-            border-radius: 32px; 
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 24px; 
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), var(--glow);
-            border: 3px solid var(--primary);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 50px rgba(255, 51, 0, 0.2);
+            border: 1px solid rgba(255, 51, 0, 0.4);
             position: relative;
             padding-bottom: 56.25%; 
             height: 0;
             transform: scale(0.98);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.6s ease;
+            background: #000;
+        }
+
+        .video-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), transparent, var(--primary-light));
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
 
         .video-wrapper:hover {
             transform: scale(1);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 69, 0, 0.6);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 1), 0 0 60px rgba(255, 51, 0, 0.4);
+            border-color: var(--primary);
+        }
+
+        .video-wrapper:hover::before {
+            opacity: 1;
         }
 
         .video-wrapper iframe {
@@ -136,103 +238,161 @@
             left: 0;
             width: 100%;
             height: 100%;
-            border-radius: 28px; 
         }
 
-        /* Content Sections */
+        /* Layout & Sections */
         section {
-            padding: 5rem 5%;
-            max-width: 1200px;
+            padding: 8rem 5%;
+            max-width: 1300px;
             margin: 0 auto;
+            position: relative;
+            z-index: 10;
         }
 
         .section-title {
+            font-family: 'Rajdhani', sans-serif;
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
+            font-size: 3rem;
+            margin-bottom: 4rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--primary);
+            letter-spacing: 4px;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
 
-        /* CSS Grid Feature Cards - PERFECT 2x2 SYMMETRY */
+        /* Glassmorphism Feature Cards - 2x2 Symmetry */
         .grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Forces exactly 2 columns */
-            gap: 2.5rem;
-            padding: 1rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
         }
 
-        /* Mobile layout: stack boxes in 1 column on smaller screens */
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 800px) {
+            .grid { grid-template-columns: 1fr; }
         }
 
         .card {
             background: var(--surface);
-            padding: 3rem 2rem;
-            border-radius: 32px; 
-            border: 2px solid var(--border);
-            text-align: center;
-            transform: translateY(0) scale(1);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            padding: 3.5rem 2.5rem;
+            border-radius: 24px; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: left;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            transform: translateY(0);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Card Hover Glow Effect */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 100%;
+            background: radial-gradient(circle at top right, rgba(255, 51, 0, 0.15), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
 
         .card:hover {
-            transform: translateY(-15px) scale(1.03); 
-            box-shadow: 0 25px 50px rgba(255, 69, 0, 0.15), 0 0 20px rgba(255, 69, 0, 0.2);
-            border-color: var(--primary);
+            transform: translateY(-12px); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 30px rgba(255, 51, 0, 0.15);
+            border-color: var(--border-color);
+        }
+
+        .card:hover::before {
+            opacity: 1;
         }
 
         .card h3 {
+            font-family: 'Rajdhani', sans-serif;
             margin-bottom: 1rem;
             color: #fff;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card strong {
+            color: var(--primary-light);
+            font-weight: 600;
         }
 
         /* Data Section */
         #data {
             text-align: center;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
             padding: 6rem 2rem;
             margin-top: 2rem;
+            position: relative;
         }
+
+        /* Clean gradient separator lines */
+        #data::before, #data::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 800px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+        #data::before { top: 0; }
+        #data::after { bottom: 0; }
 
         .verified-badge {
-            display: inline-block;
-            background: rgba(255, 69, 0, 0.1);
-            color: var(--primary);
-            padding: 1.2rem 3rem;
-            border-radius: 50px; 
-            font-size: 1.2rem;
-            font-weight: bold;
-            border: 2px solid var(--primary);
-            box-shadow: var(--glow);
+            font-family: 'Rajdhani', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 51, 0, 0.05);
+            backdrop-filter: blur(10px);
+            color: var(--primary-light);
+            padding: 1rem 3rem;
+            border-radius: 100px; 
+            font-size: 1.3rem;
+            font-weight: 700;
+            border: 1px solid rgba(255, 51, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 51, 0, 0.2);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            animation: pulse 2s infinite; 
+            letter-spacing: 2px;
+            animation: pulse-border 2s infinite alternate; 
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 15px rgba(255, 69, 0, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(255, 69, 0, 0.8); }
-            100% { box-shadow: 0 0 15px rgba(255, 69, 0, 0.4); }
+        @keyframes pulse-border {
+            0% { border-color: rgba(255, 51, 0, 0.2); box-shadow: 0 0 15px rgba(255, 51, 0, 0.1); }
+            100% { border-color: rgba(255, 51, 0, 0.8); box-shadow: 0 0 30px rgba(255, 51, 0, 0.4); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem;
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         /* Scroll Animations */
         .reveal {
             opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1); 
         }
 
         .reveal.active {
@@ -243,13 +403,17 @@
 </head>
 <body>
 
+    <!-- Ambient FX Layer -->
+    <div class="bg-fx"></div>
+    <div class="ambient-glow"></div>
+
     <!-- Navigation -->
     <nav>
-        <div class="logo">Fire Clips.</div>
+        <div class="logo">FIRE<span>CLIPS</span></div>
         <div class="nav-links">
-            <a href="#clip">Latest Clip</a>
-            <a href="#features">Features</a>
-            <a href="#data">Data</a>
+            <a href="#clip">Watch</a>
+            <a href="#features">Roster</a>
+            <a href="#data">Intel</a>
         </div>
     </nav>
 
@@ -258,7 +422,6 @@
         <div class="reveal">
             <h1>Witness <span class="highlight">Greatness</span></h1>
             
-            <!-- LIVE MEDAL.TV EMBED -->
             <div class="video-wrapper">
                 <iframe 
                     src="https://medal.tv/clip/n58h9DeXfF-XJ-YdN/v3" 
@@ -281,15 +444,15 @@
             </div>
             <div class="card reveal">
                 <h3>God-Tier Aim</h3>
-                <p>Tracking, flicks, and spray control that looks like literal aimbot. They don't miss. Period.</p>
+                <p>Tracking, flicks, and spray control that looks like literal aimbot. They don't miss. When they lock on, you're already back at the spawn screen.</p>
             </div>
             <div class="card reveal">
                 <h3>Wipe Champions</h3>
-                <p>Consistently controlling the most contested monuments and running the server from day one until wipe.</p>
+                <p>Consistently controlling the most contested monuments and running the server from day one until wipe. Total map sovereignty.</p>
             </div>
             <div class="card reveal">
                 <h3>4D Chess Mentality</h3>
-                <p>Listen, while you're out here farming nodes like a 9-to-5 employee, these guys are operating on a higher dimensional plane. They don't just predict your next move, they dictate it. They're already deep in your base, looking at your TC, before you even booted up your PC. Touching grass is for the weak.</p>
+                <p>Listen, while you're out here farming nodes like a 9-to-5 employee, these guys are operating on a higher dimensional plane. They don't predict your next move; they dictate it. Touching grass is for the weak.</p>
             </div>
         </div>
     </section>
@@ -297,18 +460,19 @@
     <!-- Data / Verification Section -->
     <section id="data">
         <div class="reveal">
-            <h2 class="section-title" style="margin-bottom: 2rem;">Server Analytics</h2>
+            <h2 class="section-title" style="margin-bottom: 2.5rem;">Server Analytics</h2>
             <div class="verified-badge">
-                ✅ 100% Real and Verified by Facepunch
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                100% Facepunch Verified
             </div>
-            <p style="margin-top: 2.5rem; color: var(--text-muted); max-width: 600px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">
-                All stats, clips, and claims regarding ivexwastaken and 71gs have been cross-referenced with server logs and authenticated directly by Facepunch Studios. 
+            <p style="margin-top: 3rem; color: var(--text-muted); max-width: 600px; margin-left: auto; margin-right: auto; font-size: 1.15rem; line-height: 1.8;">
+                All stats, clips, and claims regarding <strong>ivexwastaken</strong> and <strong>71gs</strong> have been cross-referenced with server logs, anti-cheat engines, and authenticated directly by Facepunch Studios. 
             </p>
         </div>
     </section>
 
-    <footer style="text-align: center; padding: 3rem; background: var(--bg); border-top: 1px solid var(--border);">
-        <p style="color: var(--text-muted); font-weight: bold; letter-spacing: 1px;">&copy; 2026 Fire Clips. Stay Frosty.</p>
+    <footer>
+        &copy; 2026 Fire Clips. Stay Frosty.
     </footer>
 
     <!-- Scroll Animation Logic -->
